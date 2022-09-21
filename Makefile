@@ -1,5 +1,5 @@
-DOCKER_PATH=/src
-MOCK_CODEGEN=docker run -v $(shell pwd):$(DOCKER_PATH) -w $(DOCKER_PATH)  vektra/mockery
+SRC_PATH=/src
+MOCK_CODEGEN=docker run -v $(shell pwd):$(SRC_PATH) -w $(SRC_PATH)  vektra/mockery
 
 test:
 	go test -v ./...
@@ -15,7 +15,14 @@ mock:
 		--dir=space-game/moving/movable \
 		--output=space-game/moving/movable/mocks
 
-	# movable Object
+	# Movable
+	$(MOCK_CODEGEN) \
+		--name=Rotatable \
+		--case=underscore \
+		--dir=space-game/moving/rotatable \
+		--output=space-game/moving/rotatable/mocks
+
+	# Object
 	$(MOCK_CODEGEN) \
 		--name=Object \
 		--case=underscore \

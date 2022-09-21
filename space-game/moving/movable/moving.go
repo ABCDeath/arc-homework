@@ -2,7 +2,6 @@ package movable
 
 import (
 	"errors"
-	"fmt"
 	"math"
 
 	"arc-homework/space-game/moving/object"
@@ -17,8 +16,7 @@ const (
 )
 
 var (
-	ErrNotMovable   = errors.New("object is not movable")
-	ErrPropertyType = errors.New("property type cast error")
+	ErrNotMovable = errors.New("object is not movable")
 )
 
 type Movable interface {
@@ -96,7 +94,7 @@ func (a *adapter) SetVelocity(v vector.Vector) error {
 }
 
 func getProperty[T any](obj object.Object, name string) (*T, error) {
-	propPtr, err := obj.GetProperty(name)
+	propPtr, err := object.GetObjectProperty[T](obj, name)
 	if err != nil {
 		if errors.Is(err, object.ErrNoProperty) {
 			return nil, ErrNotMovable
@@ -105,12 +103,7 @@ func getProperty[T any](obj object.Object, name string) (*T, error) {
 		return nil, err
 	}
 
-	propValue, castOk := propPtr.(*T)
-	if !castOk {
-		return nil, fmt.Errorf("%w: %s", ErrPropertyType, name)
-	}
-
-	return propValue, nil
+	return propPtr, nil
 }
 
 func New(obj object.Object) Movable {
