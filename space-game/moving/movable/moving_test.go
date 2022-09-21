@@ -31,15 +31,6 @@ func Test_getProperty(t *testing.T) {
 		})
 	}
 
-	t.Run("error if can not cast Object.GetProperty() returned value", func(t *testing.T) {
-		obj := mocks.Object{}
-		obj.On("GetProperty", PositionPropName).Return(struct{}{}, nil).Once()
-
-		_, err := getProperty[int](&obj, PositionPropName)
-		assert.ErrorIs(t, err, ErrPropertyType)
-		obj.AssertExpectations(t)
-	})
-
 	t.Run("no error", func(t *testing.T) {
 		expectedValue := 42
 		obj := mocks.Object{}

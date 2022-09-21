@@ -30,7 +30,7 @@ func TestMove_Execute(t *testing.T) {
 		movableObj.AssertExpectations(t)
 	})
 
-	t.Run("error if SetVelocity() returns error", func(t *testing.T) {
+	t.Run("error if SetPosition() returns error", func(t *testing.T) {
 		movableObj := mocks.Movable{}
 		movableObj.On("GetPosition").Return(vector.New(0, 0), nil).Once()
 		movableObj.On("GetVelocity").Return(vector.New(0, 0), nil).Once()
