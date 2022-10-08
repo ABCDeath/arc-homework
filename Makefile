@@ -28,3 +28,17 @@ mock:
 		--case=underscore \
 		--dir=space-game/moving/object \
 		--output=space-game/moving/object/mocks
+
+	# Command
+	$(MOCK_CODEGEN) \
+		--name=Command \
+		--case=underscore \
+		--dir=space-game/command \
+		--output=space-game/command/mocks
+
+	# Error Handler
+	$(MOCK_CODEGEN) \
+		--name=Handler \
+		--case=underscore \
+		--dir=space-game/error_handler \
+		--output=space-game/error_handler/mocks
