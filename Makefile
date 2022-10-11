@@ -15,7 +15,7 @@ mock:
 		--dir=space-game/moving/movable \
 		--output=space-game/moving/movable/mocks
 
-	# Movable
+	# Rotatable
 	$(MOCK_CODEGEN) \
 		--name=Rotatable \
 		--case=underscore \
@@ -42,3 +42,17 @@ mock:
 		--case=underscore \
 		--dir=space-game/error_handler \
 		--output=space-game/error_handler/mocks
+
+	# Fuel
+	$(MOCK_CODEGEN) \
+		--name=Fuel \
+		--case=underscore \
+		--dir=space-game/moving/engine \
+		--output=space-game/moving/engine/mocks
+
+	# Direction
+	$(MOCK_CODEGEN) \
+		--name=Direction \
+		--case=underscore \
+		--dir=space-game/moving/direction \
+		--output=space-game/moving/direction/mocks
