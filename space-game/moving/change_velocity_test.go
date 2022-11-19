@@ -1,6 +1,7 @@
 package moving
 
 import (
+	"context"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -15,7 +16,7 @@ func TestChangeVelocity_Execute(t *testing.T) {
 		directionObj.On("GetDirection").Return(0, direction.ErrNoDirection).Once()
 
 		cmd := NewChangeVelocity(&directionObj)
-		err := cmd.Execute()
+		err := cmd.Execute(context.Background())
 		assert.ErrorIs(t, err, direction.ErrNoDirection)
 		directionObj.AssertExpectations(t)
 	})
@@ -26,7 +27,7 @@ func TestChangeVelocity_Execute(t *testing.T) {
 		directionObj.On("GetDirectionsNum").Return(0, direction.ErrNoDirection).Once()
 
 		cmd := NewChangeVelocity(&directionObj)
-		err := cmd.Execute()
+		err := cmd.Execute(context.Background())
 		assert.ErrorIs(t, err, direction.ErrNoDirection)
 		directionObj.AssertExpectations(t)
 	})
@@ -38,7 +39,7 @@ func TestChangeVelocity_Execute(t *testing.T) {
 		directionObj.On("GetAngularVelocity").Return(0, direction.ErrNoDirection).Once()
 
 		cmd := NewChangeVelocity(&directionObj)
-		err := cmd.Execute()
+		err := cmd.Execute(context.Background())
 		assert.ErrorIs(t, err, direction.ErrNoDirection)
 		directionObj.AssertExpectations(t)
 	})
@@ -51,7 +52,7 @@ func TestChangeVelocity_Execute(t *testing.T) {
 		directionObj.On("SetDirection", 0).Return(direction.ErrNoDirection).Once()
 
 		cmd := NewChangeVelocity(&directionObj)
-		err := cmd.Execute()
+		err := cmd.Execute(context.Background())
 		assert.ErrorIs(t, err, direction.ErrNoDirection)
 		directionObj.AssertExpectations(t)
 	})
@@ -64,7 +65,7 @@ func TestChangeVelocity_Execute(t *testing.T) {
 		directionObj.On("SetDirection", 3).Return(nil).Once()
 
 		cmd := NewChangeVelocity(&directionObj)
-		err := cmd.Execute()
+		err := cmd.Execute(context.Background())
 		assert.NoError(t, err)
 		directionObj.AssertExpectations(t)
 	})

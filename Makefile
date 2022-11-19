@@ -1,11 +1,15 @@
+PROJECT_ROOT=$(shell pwd)
 SRC_PATH=/src
 MOCK_CODEGEN=docker run -v $(shell pwd):$(SRC_PATH) -w $(SRC_PATH)  vektra/mockery
 
-test:
-	go test -v ./...
+codegen:
+	PROJECT_ROOT=$(PROJECT_ROOT) go generate ./...
 
-build:
-	go build -o build/binary -v ./...
+test:
+	go test -v ./space-game/...
+
+build: codegen
+	go build -o build/binary -v ./space-game/...
 
 mock:
 	# Movable

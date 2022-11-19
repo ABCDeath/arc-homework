@@ -13,7 +13,7 @@ type ContextScopeKeyType string
 const ContextScopeKey = ContextScopeKeyType("ioc.scope")
 
 type IoC interface {
-	Resolve(ctx context.Context, name string, params ...interface{}) (command.Command, error)
+	Resolve(ctx context.Context, name string, params ...interface{}) (interface{}, error)
 }
 
 type Builder func(ctx context.Context, args ...interface{}) (command.Command, error)
@@ -23,7 +23,7 @@ type ioc struct {
 	scopeDeps   *sync.Map
 }
 
-func (i *ioc) Resolve(ctx context.Context, name string, params ...interface{}) (command.Command, error) {
+func (i *ioc) Resolve(ctx context.Context, name string, params ...interface{}) (interface{}, error) {
 	var storage *sync.Map
 	if _, found := restrictedToRegisterOperations[name]; found {
 		storage = i.defaultDeps

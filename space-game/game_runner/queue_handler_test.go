@@ -1,6 +1,7 @@
 package game_runner
 
 import (
+	"context"
 	"errors"
 	"testing"
 
@@ -13,7 +14,7 @@ func TestQueue_Run(t *testing.T) {
 		errHandler := mocks.Handler{}
 
 		cmd := cmdmock.Command{}
-		cmd.On("Execute").Return(nil).Once()
+		cmd.On("Execute", context.Background()).Return(nil).Once()
 
 		q := NewQueue(&errHandler)
 		q.Enqueue(&cmd)
@@ -26,7 +27,7 @@ func TestQueue_Run(t *testing.T) {
 	t.Run("call error handler if command.Execute() returns error", func(t *testing.T) {
 		err := errors.New("")
 		cmd := cmdmock.Command{}
-		cmd.On("Execute").Return(err).Once()
+		cmd.On("Execute", context.Background()).Return(err).Once()
 
 		errHandler := mocks.Handler{}
 		errHandler.On("Handle", &cmd, err).Return(nil).Once()

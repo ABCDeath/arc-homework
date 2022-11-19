@@ -1,6 +1,7 @@
 package command
 
 import (
+	"context"
 	"log"
 
 	"arc-homework/space-game/helper"
@@ -14,7 +15,7 @@ type LogErrorCommand struct {
 	err     error
 }
 
-func (c *LogErrorCommand) Execute() error {
+func (c *LogErrorCommand) Execute(_ context.Context) error {
 	c.logger.Printf(messagePattern, c.cmdName, c.err)
 
 	return nil

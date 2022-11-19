@@ -1,6 +1,7 @@
 package game_runner
 
 import (
+	"context"
 	"errors"
 	"testing"
 
@@ -19,7 +20,7 @@ func Test_configureErrorHandler(t *testing.T) {
 		configureErrorHandler(cmdQueue, errHandler)
 
 		cmd := mocks.Command{}
-		cmd.On("Execute").Return(errors.New("")).Once()
+		cmd.On("Execute", context.Background()).Return(errors.New("")).Once()
 
 		cmdQueue.Enqueue(&cmd)
 		cmdQueue.dequeAndRun()
@@ -37,8 +38,8 @@ func Test_configureErrorHandler(t *testing.T) {
 		configureErrorHandler(cmdQueue, errHandler)
 
 		cmd := mocks.Command{}
-		cmd.On("Execute").Return(errors.New("")).Once()
-		cmd.On("Execute").Return(nil).Once()
+		cmd.On("Execute", context.Background()).Return(errors.New("")).Once()
+		cmd.On("Execute", context.Background()).Return(nil).Once()
 
 		cmdQueue.Enqueue(&cmd)
 		cmdQueue.Run()
@@ -53,7 +54,7 @@ func Test_configureErrorHandler(t *testing.T) {
 		configureErrorHandler(cmdQueue, errHandler)
 
 		cmd := mocks.Command{}
-		cmd.On("Execute").Return(errors.New("")).Twice()
+		cmd.On("Execute", context.Background()).Return(errors.New("")).Twice()
 
 		cmdQueue.Enqueue(&cmd)
 		cmdQueue.dequeAndRun()
@@ -72,8 +73,8 @@ func Test_configureErrorHandler(t *testing.T) {
 		configureErrorHandler(cmdQueue, errHandler)
 
 		cmd := mocks.Command{}
-		cmd.On("Execute").Return(errors.New("")).Twice()
-		cmd.On("Execute").Return(nil).Once()
+		cmd.On("Execute", context.Background()).Return(errors.New("")).Twice()
+		cmd.On("Execute", context.Background()).Return(nil).Once()
 
 		cmdQueue.Enqueue(&cmd)
 		cmdQueue.Run()
@@ -88,7 +89,7 @@ func Test_configureErrorHandler(t *testing.T) {
 		configureErrorHandler(cmdQueue, errHandler)
 
 		cmd := mocks.Command{}
-		cmd.On("Execute").Return(errors.New("")).Times(3)
+		cmd.On("Execute", context.Background()).Return(errors.New("")).Times(3)
 
 		cmdQueue.Enqueue(&cmd)
 		cmdQueue.dequeAndRun()

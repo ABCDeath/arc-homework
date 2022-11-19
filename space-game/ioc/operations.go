@@ -25,7 +25,7 @@ type registerOp struct {
 	storage *sync.Map
 }
 
-func (o *registerOp) Execute() error {
+func (o *registerOp) Execute(_ context.Context) error {
 	o.storage.Store(o.name, o.builder)
 
 	return nil
@@ -44,7 +44,7 @@ type newScopeOp struct {
 	storage *sync.Map
 }
 
-func (o *newScopeOp) Execute() error {
+func (o *newScopeOp) Execute(_ context.Context) error {
 	o.storage.Store(o.scope, &sync.Map{})
 
 	return nil
@@ -59,7 +59,7 @@ func NewNewScopeOp(scope string, storage *sync.Map) *newScopeOp {
 
 type currentScopeOp struct{}
 
-func (o *currentScopeOp) Execute() error {
+func (o *currentScopeOp) Execute(_ context.Context) error {
 	// there is no goroutine or thread local storage in golang
 	// and golang does not have a mutable context
 	// and IoC or Command interfaces do not allow us to return a context.Context

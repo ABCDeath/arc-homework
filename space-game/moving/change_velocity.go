@@ -1,6 +1,8 @@
 package moving
 
 import (
+	"context"
+
 	"arc-homework/space-game/moving/direction"
 )
 
@@ -8,7 +10,7 @@ type ChangeVelocity struct {
 	obj direction.Direction
 }
 
-func (c *ChangeVelocity) Execute() error {
+func (c *ChangeVelocity) Execute(_ context.Context) error {
 	dir, err := c.obj.GetDirection()
 	if err != nil {
 		return err

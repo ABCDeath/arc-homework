@@ -17,7 +17,7 @@ func Test_registerOp_Execute(t *testing.T) {
 		builder := func(ctx context.Context, args ...interface{}) (command.Command, error) { return nil, nil }
 
 		op := NewRegister(storage, newOpName, builder)
-		err := op.Execute()
+		err := op.Execute(context.Background())
 
 		assert.NoError(t, err)
 		_, found := storage.Load(newOpName)
@@ -31,7 +31,7 @@ func Test_newScopeOp_Execute(t *testing.T) {
 		storage := &sync.Map{}
 
 		op := NewNewScopeOp(scope, storage)
-		err := op.Execute()
+		err := op.Execute(context.Background())
 
 		assert.NoError(t, err)
 		_, found := storage.Load(scope)
@@ -42,7 +42,7 @@ func Test_newScopeOp_Execute(t *testing.T) {
 func Test_currentScopeOp_Execute(t *testing.T) {
 	t.Run("does nothing", func(t *testing.T) {
 		op := NewCurrentScopeOp()
-		err := op.Execute()
+		err := op.Execute(context.Background())
 
 		assert.NoError(t, err)
 	})

@@ -1,6 +1,8 @@
 package game_runner
 
 import (
+	"context"
+
 	"arc-homework/space-game/command"
 	errhandler "arc-homework/space-game/error_handler"
 )
@@ -38,7 +40,7 @@ func (q *Queue) Run() {
 func (q *Queue) dequeAndRun() {
 	cmd := q.Dequeue()
 
-	err := cmd.Execute()
+	err := cmd.Execute(context.Background())
 	if err != nil {
 		e := q.errHandler.Handle(cmd, err)
 		if e != nil {
