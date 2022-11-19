@@ -1,6 +1,7 @@
 package moving
 
 import (
+	"context"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -16,7 +17,7 @@ func TestCheckFuel_Execute(t *testing.T) {
 		fuelObj.On("GetFuelAmount").Return(0, engine.ErrFuelIsNotSupported).Once()
 
 		cmd := NewCheckFuel(&fuelObj)
-		err := cmd.Execute()
+		err := cmd.Execute(context.Background())
 		assert.ErrorIs(t, err, engine.ErrFuelIsNotSupported)
 		fuelObj.AssertExpectations(t)
 	})
@@ -26,7 +27,7 @@ func TestCheckFuel_Execute(t *testing.T) {
 		fuelObj.On("GetFuelAmount").Return(0, nil).Once()
 
 		cmd := NewCheckFuel(&fuelObj)
-		err := cmd.Execute()
+		err := cmd.Execute(context.Background())
 		assert.ErrorIs(t, err, command.ErrCommand)
 		fuelObj.AssertExpectations(t)
 	})
@@ -36,7 +37,7 @@ func TestCheckFuel_Execute(t *testing.T) {
 		fuelObj.On("GetFuelAmount").Return(42, nil).Once()
 
 		cmd := NewCheckFuel(&fuelObj)
-		err := cmd.Execute()
+		err := cmd.Execute(context.Background())
 		assert.NoError(t, err)
 		fuelObj.AssertExpectations(t)
 	})
@@ -48,7 +49,7 @@ func TestBurnFuel_Execute(t *testing.T) {
 		fuelObj.On("GetFuelAmount").Return(0, engine.ErrFuelIsNotSupported).Once()
 
 		cmd := NewBurnFuel(&fuelObj)
-		err := cmd.Execute()
+		err := cmd.Execute(context.Background())
 		assert.ErrorIs(t, err, engine.ErrFuelIsNotSupported)
 		fuelObj.AssertExpectations(t)
 	})
@@ -59,7 +60,7 @@ func TestBurnFuel_Execute(t *testing.T) {
 		fuelObj.On("GetFuelBurnRate").Return(0, engine.ErrFuelIsNotSupported).Once()
 
 		cmd := NewBurnFuel(&fuelObj)
-		err := cmd.Execute()
+		err := cmd.Execute(context.Background())
 		assert.ErrorIs(t, err, engine.ErrFuelIsNotSupported)
 		fuelObj.AssertExpectations(t)
 	})
@@ -71,7 +72,7 @@ func TestBurnFuel_Execute(t *testing.T) {
 		fuelObj.On("SetFuelAmount", 0).Return(engine.ErrFuelIsNotSupported).Once()
 
 		cmd := NewBurnFuel(&fuelObj)
-		err := cmd.Execute()
+		err := cmd.Execute(context.Background())
 		assert.ErrorIs(t, err, engine.ErrFuelIsNotSupported)
 		fuelObj.AssertExpectations(t)
 	})
@@ -84,7 +85,7 @@ func TestBurnFuel_Execute(t *testing.T) {
 		fuelObj.On("SetFuelAmount", amount-rate).Return(nil).Once()
 
 		cmd := NewBurnFuel(&fuelObj)
-		err := cmd.Execute()
+		err := cmd.Execute(context.Background())
 		assert.NoError(t, err)
 		fuelObj.AssertExpectations(t)
 	})

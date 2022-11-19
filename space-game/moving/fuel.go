@@ -1,6 +1,7 @@
 package moving
 
 import (
+	"context"
 	"fmt"
 
 	"arc-homework/space-game/command"
@@ -11,7 +12,7 @@ type CheckFuel struct {
 	fuelObj engine.Fuel
 }
 
-func (f *CheckFuel) Execute() error {
+func (f *CheckFuel) Execute(_ context.Context) error {
 	fuelAmount, err := f.fuelObj.GetFuelAmount()
 	if err != nil {
 		return err
@@ -32,7 +33,7 @@ type BurnFuel struct {
 	fuelObj engine.Fuel
 }
 
-func (f *BurnFuel) Execute() error {
+func (f *BurnFuel) Execute(_ context.Context) error {
 	fuelAmount, err := f.fuelObj.GetFuelAmount()
 	if err != nil {
 		return err

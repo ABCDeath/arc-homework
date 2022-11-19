@@ -1,6 +1,7 @@
 package moving
 
 import (
+	"context"
 	"errors"
 	"testing"
 
@@ -16,7 +17,7 @@ func TestRotate_Execute(t *testing.T) {
 		rotatableObj := mocks.Rotatable{}
 		rotatableObj.On("GetAngle").Return(0, rotatable.ErrNotRotatable).Once()
 
-		err := NewRotate(&rotatableObj).Execute()
+		err := NewRotate(&rotatableObj).Execute(context.Background())
 		assert.ErrorIs(t, err, rotatable.ErrNotRotatable)
 		rotatableObj.AssertExpectations(t)
 	})
@@ -26,7 +27,7 @@ func TestRotate_Execute(t *testing.T) {
 		rotatableObj.On("GetAngle").Return(0, nil).Once()
 		rotatableObj.On("GetAngularVelocity").Return(0, rotatable.ErrNotRotatable).Once()
 
-		err := NewRotate(&rotatableObj).Execute()
+		err := NewRotate(&rotatableObj).Execute(context.Background())
 		assert.ErrorIs(t, err, rotatable.ErrNotRotatable)
 		rotatableObj.AssertExpectations(t)
 	})
@@ -37,7 +38,7 @@ func TestRotate_Execute(t *testing.T) {
 		rotatableObj.On("GetAngularVelocity").Return(0, nil).Once()
 		rotatableObj.On("SetAngle", 0).Return(rotatable.ErrNotRotatable).Once()
 
-		err := NewRotate(&rotatableObj).Execute()
+		err := NewRotate(&rotatableObj).Execute(context.Background())
 		assert.ErrorIs(t, err, rotatable.ErrNotRotatable)
 		rotatableObj.AssertExpectations(t)
 	})
@@ -48,7 +49,7 @@ func TestRotate_Execute(t *testing.T) {
 		rotatableObj.On("GetAngularVelocity").Return(-90, nil).Once()
 		rotatableObj.On("SetAngle", 315).Return(nil).Once()
 
-		err := NewRotate(&rotatableObj).Execute()
+		err := NewRotate(&rotatableObj).Execute(context.Background())
 		assert.NoError(t, err)
 		rotatableObj.AssertExpectations(t)
 	})
@@ -59,7 +60,7 @@ func TestRotate_Execute(t *testing.T) {
 		rotatableObj.On("GetAngularVelocity").Return(90, nil).Once()
 		rotatableObj.On("SetAngle", 45).Return(nil).Once()
 
-		err := NewRotate(&rotatableObj).Execute()
+		err := NewRotate(&rotatableObj).Execute(context.Background())
 		assert.NoError(t, err)
 		rotatableObj.AssertExpectations(t)
 	})
@@ -69,22 +70,22 @@ func TestRotateAndChangeVelocity_Execute(t *testing.T) {
 	t.Run("error if underlying command returns error", func(t *testing.T) {
 		expectedErr := errors.New("")
 		cmd := cmdmock.Command{}
-		cmd.On("Execute").Return(expectedErr).Once()
+		cmd.On("Execute", context.Background()).Return(expectedErr).Once()
 
 		command := RotateAndChangeVelocity{cmd: &cmd}
 
-		err := command.Execute()
+		err := command.Execute(context.Background())
 		assert.ErrorIs(t, err, expectedErr)
 		cmd.AssertExpectations(t)
 	})
 
 	t.Run("executes underlying command", func(t *testing.T) {
 		cmd := cmdmock.Command{}
-		cmd.On("Execute").Return(nil).Once()
+		cmd.On("Execute", context.Background()).Return(nil).Once()
 
 		command := RotateAndChangeVelocity{cmd: &cmd}
 
-		err := command.Execute()
+		err := command.Execute(context.Background())
 		assert.NoError(t, err)
 		cmd.AssertExpectations(t)
 	})

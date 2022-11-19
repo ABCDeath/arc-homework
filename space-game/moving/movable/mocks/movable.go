@@ -3,6 +3,8 @@
 package mocks
 
 import (
+	context "context"
+
 	mock "github.com/stretchr/testify/mock"
 
 	vector "arc-homework/space-game/moving/vector"
@@ -13,20 +15,20 @@ type Movable struct {
 	mock.Mock
 }
 
-// GetPosition provides a mock function with given fields:
-func (_m *Movable) GetPosition() (vector.Vector, error) {
-	ret := _m.Called()
+// GetPosition provides a mock function with given fields: ctx
+func (_m *Movable) GetPosition(ctx context.Context) (vector.Vector, error) {
+	ret := _m.Called(ctx)
 
 	var r0 vector.Vector
-	if rf, ok := ret.Get(0).(func() vector.Vector); ok {
-		r0 = rf()
+	if rf, ok := ret.Get(0).(func(context.Context) vector.Vector); ok {
+		r0 = rf(ctx)
 	} else {
 		r0 = ret.Get(0).(vector.Vector)
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func() error); ok {
-		r1 = rf()
+	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
+		r1 = rf(ctx)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -34,20 +36,20 @@ func (_m *Movable) GetPosition() (vector.Vector, error) {
 	return r0, r1
 }
 
-// GetVelocity provides a mock function with given fields:
-func (_m *Movable) GetVelocity() (vector.Vector, error) {
-	ret := _m.Called()
+// GetVelocity provides a mock function with given fields: ctx
+func (_m *Movable) GetVelocity(ctx context.Context) (vector.Vector, error) {
+	ret := _m.Called(ctx)
 
 	var r0 vector.Vector
-	if rf, ok := ret.Get(0).(func() vector.Vector); ok {
-		r0 = rf()
+	if rf, ok := ret.Get(0).(func(context.Context) vector.Vector); ok {
+		r0 = rf(ctx)
 	} else {
 		r0 = ret.Get(0).(vector.Vector)
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func() error); ok {
-		r1 = rf()
+	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
+		r1 = rf(ctx)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -55,32 +57,46 @@ func (_m *Movable) GetVelocity() (vector.Vector, error) {
 	return r0, r1
 }
 
-// SetPosition provides a mock function with given fields: v
-func (_m *Movable) SetPosition(v vector.Vector) error {
-	ret := _m.Called(v)
+// SetPosition provides a mock function with given fields: ctx, v
+func (_m *Movable) SetPosition(ctx context.Context, v vector.Vector) (vector.Vector, error) {
+	ret := _m.Called(ctx, v)
 
-	var r0 error
-	if rf, ok := ret.Get(0).(func(vector.Vector) error); ok {
-		r0 = rf(v)
+	var r0 vector.Vector
+	if rf, ok := ret.Get(0).(func(context.Context, vector.Vector) vector.Vector); ok {
+		r0 = rf(ctx, v)
 	} else {
-		r0 = ret.Error(0)
+		r0 = ret.Get(0).(vector.Vector)
 	}
 
-	return r0
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, vector.Vector) error); ok {
+		r1 = rf(ctx, v)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
 }
 
-// SetVelocity provides a mock function with given fields: v
-func (_m *Movable) SetVelocity(v vector.Vector) error {
-	ret := _m.Called(v)
+// SetVelocity provides a mock function with given fields: ctx, v
+func (_m *Movable) SetVelocity(ctx context.Context, v vector.Vector) (vector.Vector, error) {
+	ret := _m.Called(ctx, v)
 
-	var r0 error
-	if rf, ok := ret.Get(0).(func(vector.Vector) error); ok {
-		r0 = rf(v)
+	var r0 vector.Vector
+	if rf, ok := ret.Get(0).(func(context.Context, vector.Vector) vector.Vector); ok {
+		r0 = rf(ctx, v)
 	} else {
-		r0 = ret.Error(0)
+		r0 = ret.Get(0).(vector.Vector)
 	}
 
-	return r0
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, vector.Vector) error); ok {
+		r1 = rf(ctx, v)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
 }
 
 type mockConstructorTestingTNewMovable interface {

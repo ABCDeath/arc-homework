@@ -73,7 +73,7 @@ func Test_initContainerOperations(t *testing.T) {
 		cmd, err := handler(context.Background(), opName, dummyBuilder)
 		assert.NoError(t, err)
 
-		err = cmd.Execute()
+		err = cmd.Execute(context.Background())
 		assert.NoError(t, err)
 
 		_, found := ioc.defaultDeps.Load(opName)
@@ -97,7 +97,7 @@ func Test_initContainerOperations(t *testing.T) {
 		cmd, err := handler(ctx, opName, dummyBuilder)
 		assert.NoError(t, err)
 
-		err = cmd.Execute()
+		err = cmd.Execute(context.Background())
 		assert.NoError(t, err)
 
 		_, found := ioc.scopeDeps.Load(scopeName)
@@ -134,7 +134,7 @@ func Test_initContainerOperations(t *testing.T) {
 		cmd, err := handler(context.Background(), scope)
 		assert.NoError(t, err)
 
-		err = cmd.Execute()
+		err = cmd.Execute(context.Background())
 		assert.NoError(t, err)
 		_, found := ioc.scopeDeps.Load(scope)
 		assert.True(t, found)
@@ -153,7 +153,7 @@ func Test_initContainerOperations(t *testing.T) {
 		cmd, err := handler(context.Background(), scope)
 		assert.NoError(t, err)
 
-		err = cmd.Execute()
+		err = cmd.Execute(context.Background())
 		assert.NoError(t, err)
 	})
 }
@@ -170,9 +170,9 @@ func TestIoC_Concurrently(t *testing.T) {
 		scope1, scope2, scope3 := "Scope.1", "Scope.2", "Scope.3"
 		handler1, handler2, handler3 := "foo1", "foo2", "foo3"
 		handler1Mock, handler2Mock, handler3Mock := mocks.Command{}, mocks.Command{}, mocks.Command{}
-		handler1Mock.On("Execute").Return(nil).Once()
-		handler2Mock.On("Execute").Return(nil).Once()
-		handler3Mock.On("Execute").Return(nil).Once()
+		handler1Mock.On("Execute", context.Background()).Return(nil).Once()
+		handler2Mock.On("Execute", context.Background()).Return(nil).Once()
+		handler3Mock.On("Execute", context.Background()).Return(nil).Once()
 		wg := sync.WaitGroup{}
 
 		go func() {
@@ -184,24 +184,40 @@ func TestIoC_Concurrently(t *testing.T) {
 
 			ctx := context.WithValue(context.Background(), ContextScopeKey, scope1)
 
-			cmd, err := ioc.Resolve(ctx, NewScope, scope1)
-			require.NoError(t, err)
-			err = cmd.Execute()
+			cmdIface, err := ioc.Resolve(ctx, NewScope, scope1)
 			require.NoError(t, err)
 
-			cmd, err = ioc.Resolve(ctx, CurrentScope, scope1)
-			require.NoError(t, err)
-			err = cmd.Execute()
+			cmd, ok := cmdIface.(command.Command)
+			require.True(t, ok)
+
+			err = cmd.Execute(context.Background())
 			require.NoError(t, err)
 
-			cmd, err = ioc.Resolve(ctx, Register, handler1, handle)
+			cmdIface, err = ioc.Resolve(ctx, CurrentScope, scope1)
+
+			cmd, ok = cmdIface.(command.Command)
+			require.True(t, ok)
+
 			require.NoError(t, err)
-			err = cmd.Execute()
+			err = cmd.Execute(context.Background())
 			require.NoError(t, err)
 
-			cmd, err = ioc.Resolve(ctx, handler1)
+			cmdIface, err = ioc.Resolve(ctx, Register, handler1, handle)
+
+			cmd, ok = cmdIface.(command.Command)
+			require.True(t, ok)
+
 			require.NoError(t, err)
-			err = cmd.Execute()
+			err = cmd.Execute(context.Background())
+			require.NoError(t, err)
+
+			cmdIface, err = ioc.Resolve(ctx, handler1)
+
+			cmd, ok = cmdIface.(command.Command)
+			require.True(t, ok)
+
+			require.NoError(t, err)
+			err = cmd.Execute(context.Background())
 			require.NoError(t, err)
 		}()
 		wg.Add(1)
@@ -215,24 +231,40 @@ func TestIoC_Concurrently(t *testing.T) {
 
 			ctx := context.WithValue(context.Background(), ContextScopeKey, scope3)
 
-			cmd, err := ioc.Resolve(ctx, NewScope, scope2)
+			cmdIface, err := ioc.Resolve(ctx, NewScope, scope2)
+
+			cmd, ok := cmdIface.(command.Command)
+			require.True(t, ok)
+
 			require.NoError(t, err)
-			err = cmd.Execute()
+			err = cmd.Execute(context.Background())
 			require.NoError(t, err)
 
-			cmd, err = ioc.Resolve(ctx, CurrentScope, scope2)
+			cmdIface, err = ioc.Resolve(ctx, CurrentScope, scope2)
+
+			cmd, ok = cmdIface.(command.Command)
+			require.True(t, ok)
+
 			require.NoError(t, err)
-			err = cmd.Execute()
+			err = cmd.Execute(context.Background())
 			require.NoError(t, err)
 
-			cmd, err = ioc.Resolve(ctx, Register, handler2, handle)
+			cmdIface, err = ioc.Resolve(ctx, Register, handler2, handle)
+
+			cmd, ok = cmdIface.(command.Command)
+			require.True(t, ok)
+
 			require.NoError(t, err)
-			err = cmd.Execute()
+			err = cmd.Execute(context.Background())
 			require.NoError(t, err)
 
-			cmd, err = ioc.Resolve(ctx, handler2)
+			cmdIface, err = ioc.Resolve(ctx, handler2)
+
+			cmd, ok = cmdIface.(command.Command)
+			require.True(t, ok)
+
 			require.NoError(t, err)
-			err = cmd.Execute()
+			err = cmd.Execute(context.Background())
 			require.NoError(t, err)
 		}()
 		wg.Add(1)
@@ -246,24 +278,40 @@ func TestIoC_Concurrently(t *testing.T) {
 
 			ctx := context.WithValue(context.Background(), ContextScopeKey, scope3)
 
-			cmd, err := ioc.Resolve(ctx, NewScope, scope3)
+			cmdIface, err := ioc.Resolve(ctx, NewScope, scope3)
+
+			cmd, ok := cmdIface.(command.Command)
+			require.True(t, ok)
+
 			require.NoError(t, err)
-			err = cmd.Execute()
+			err = cmd.Execute(context.Background())
 			require.NoError(t, err)
 
-			cmd, err = ioc.Resolve(ctx, CurrentScope, scope3)
+			cmdIface, err = ioc.Resolve(ctx, CurrentScope, scope3)
+
+			cmd, ok = cmdIface.(command.Command)
+			require.True(t, ok)
+
 			require.NoError(t, err)
-			err = cmd.Execute()
+			err = cmd.Execute(context.Background())
 			require.NoError(t, err)
 
-			cmd, err = ioc.Resolve(ctx, Register, handler3, handle)
+			cmdIface, err = ioc.Resolve(ctx, Register, handler3, handle)
+
+			cmd, ok = cmdIface.(command.Command)
+			require.True(t, ok)
+
 			require.NoError(t, err)
-			err = cmd.Execute()
+			err = cmd.Execute(context.Background())
 			require.NoError(t, err)
 
-			cmd, err = ioc.Resolve(ctx, handler3)
+			cmdIface, err = ioc.Resolve(ctx, handler3)
+
+			cmd, ok = cmdIface.(command.Command)
+			require.True(t, ok)
+
 			require.NoError(t, err)
-			err = cmd.Execute()
+			err = cmd.Execute(context.Background())
 			require.NoError(t, err)
 		}()
 		wg.Add(1)

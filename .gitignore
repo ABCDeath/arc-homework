@@ -14,3 +14,5 @@
 # other files
 .idea
 build
+.python-version
+.pytest_cache

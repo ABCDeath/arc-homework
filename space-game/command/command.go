@@ -1,11 +1,14 @@
 package command
 
-import "errors"
+import (
+	"context"
+	"errors"
+)
 
 var (
 	ErrCommand = errors.New("command error")
 )
 
 type Command interface {
-	Execute() error
+	Execute(ctx context.Context) error
 }
