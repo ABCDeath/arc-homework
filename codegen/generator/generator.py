@@ -1,6 +1,6 @@
 import abc
 import os
-from typing import Iterable
+from typing import Dict, Iterable
 
 from generator.utils import read_content
 
@@ -25,7 +25,7 @@ class CodeGeneratorBase(abc.ABC):
         self._dependency_module = dependency_module
         self._templates = self._init_templates()
 
-    def _init_templates(self) -> dict[str, str]:
+    def _init_templates(self) -> Dict[str, str]:
         templates = {}
         path = os.path.join(self._root, self._BASE_TEMPLATE_PATH, self._TEMPLATE_PATH)
         for _, _, filenames in os.walk(path):

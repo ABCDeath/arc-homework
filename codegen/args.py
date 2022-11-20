@@ -1,6 +1,6 @@
 import os
 import sys
-from typing import NamedTuple
+from typing import Dict, NamedTuple, Tuple
 
 
 class CodeGenParams(NamedTuple):
@@ -23,12 +23,12 @@ def get_codegen_params() -> CodeGenParams:
     )
 
 
-def _get_args() -> dict[str, str]:
+def _get_args() -> Dict[str, str]:
     return dict(_get_arg_key_value(a) for a in sys.argv[1:])
 
 
-def _get_arg_key_value(arg: str) -> tuple[str, str]:
-    kv = arg.removeprefix('--').split('=', maxsplit=1)
+def _get_arg_key_value(arg: str) -> Tuple[str, str]:
+    kv = arg.replace('--', '').split('=', maxsplit=1)
     if len(kv) > 1:
         return kv[0], kv[1]
 
