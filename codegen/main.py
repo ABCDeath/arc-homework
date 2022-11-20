@@ -1,4 +1,5 @@
 import os
+from typing import List
 
 from args import get_codegen_params
 from generator.factory import generator_factory
@@ -7,7 +8,7 @@ from generator.factory import generator_factory
 _FILE_EXTENSION = 'go'
 
 
-def _read_source(filename: str) -> list[str]:
+def _read_source(filename: str) -> List[str]:
     with open(filename) as f:
         return f.readlines()
 

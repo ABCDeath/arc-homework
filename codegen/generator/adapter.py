@@ -1,7 +1,7 @@
 import itertools
 import re
 import string
-from typing import Iterable
+from typing import Dict, Iterable, Tuple
 
 from generator.generator import CodeGeneratorBase
 
@@ -44,7 +44,7 @@ class AdapterGenerator(CodeGeneratorBase):
         struct_name: str,
         dependency_module: str,
         body: Iterable[str],
-    ) -> tuple[str, ...]:
+    ) -> Tuple[str, ...]:
         return tuple(
             self._build_method(
                 receiver_name=struct_name,
@@ -90,14 +90,14 @@ class AdapterGenerator(CodeGeneratorBase):
 
         return method_name
 
-    def _parse_signature(self, signature: str) -> tuple[dict[str, str], tuple[str, ...]]:
+    def _parse_signature(self, signature: str) -> Tuple[Dict[str, str], Tuple[str, ...]]:
         return (
             self._parse_signature_for_args(signature),
             self._parse_signature_for_return(signature),
         )
 
     @staticmethod
-    def _parse_signature_for_args(signature: str) -> dict[str, str]:
+    def _parse_signature_for_args(signature: str) -> Dict[str, str]:
         args_substring_slice = slice(signature.find('(') + 1, signature.find(')'))
         args = signature[args_substring_slice].split(', ')
         if not args or args[0] == '':
@@ -106,7 +106,7 @@ class AdapterGenerator(CodeGeneratorBase):
         return dict(s.split(' ') for s in args)
 
     @staticmethod
-    def _parse_signature_for_return(signature: str) -> tuple[str, ...]:
+    def _parse_signature_for_return(signature: str) -> Tuple[str, ...]:
         signature = signature[signature.find(')') + 1:]
         ret_closing = signature.rfind(')')
         if ret_closing < 0:
@@ -134,7 +134,7 @@ class AdapterGenerator(CodeGeneratorBase):
             ')'
         )
 
-    def _get_current_imports(self) -> dict[str, str]:
+    def _get_current_imports(self) -> Dict[str, str]:
         import_position = -1
         for i, s in enumerate(self._content[:self._line]):
             if 'import' in s:
@@ -157,7 +157,7 @@ class AdapterGenerator(CodeGeneratorBase):
             for i in self._content[import_position + 1:import_closing]
         }
 
-    def _get_required_modules(self, interface_body: Iterable[str]) -> tuple[str, ...]:
+    def _get_required_modules(self, interface_body: Iterable[str]) -> Tuple[str, ...]:
         return_types = itertools.chain(
             *tuple(self._parse_signature_for_return(s) for s in interface_body)
         )
