@@ -60,3 +60,10 @@ mock:
 		--case=underscore \
 		--dir=space-game/moving/direction \
 		--output=space-game/moving/direction/mocks
+
+	# Queue
+	$(MOCK_CODEGEN) \
+		--name=Queue \
+		--case=underscore \
+		--dir=space-game/queue \
+		--output=space-game/queue/mocks
