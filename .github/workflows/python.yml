@@ -37,4 +37,4 @@ jobs:
       if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
     - name: Test with pytest
       run: |
-        cd codegen && poetry run pytest
+        cd codegen && poetry install && poetry run pytest
